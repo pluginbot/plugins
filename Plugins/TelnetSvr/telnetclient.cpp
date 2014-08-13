@@ -129,17 +129,17 @@ void TelnetClient::readyRead()
         //Append the buffer
         m_Buffer.append(m_Socket->readAll());
 
-        if(!m_Authenticated)
-        {
-            QString password = m_Buffer.trimmed();
-            m_Buffer.clear();
-
-            emit authenticate(password);
-            return;
-        }
-
         if(m_Buffer.endsWith("\n") || m_Buffer.endsWith("\r"))
         {
+            if(!m_Authenticated)
+            {
+                QString password = m_Buffer.trimmed();
+                m_Buffer.clear();
+
+                emit authenticate(password);
+                return;
+            }
+
             qDebug() << "Telnet client to shell: " << m_SocketID << " " << m_Buffer;
 
             //Send the command to the system process
