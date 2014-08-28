@@ -96,7 +96,7 @@ QString WindowsKeyLogger::Version()
 {
     try
     {
-        return "1.0";
+        return "1.1";
     }
     catch(...)
     {

